@@ -2,7 +2,7 @@
 /*
  * Plugin Name: GM Shop Cart and Checkout
  * Description: Модальное окно для управления корзиной и формой оформления заказа.
- * Version: 0.3.5
+ * Version: 0.3.6
  * Author: Alexnder Yurkinskiy
  */
 
@@ -25,13 +25,14 @@ class GmsCartCheckout {
         // foreach ( glob( GMS_PLUGIN_DIR . "includes/*.php" ) as $file ) {
         //     include_once $file;
         // }
+        include_once GMS_PLUGIN_DIR . 'helpers/GmsLogger.php';
         include_once GMS_PLUGIN_DIR . 'include/GmsAdminPage.php';
         include_once GMS_PLUGIN_DIR . 'include/GmsCommon.php';
         include_once GMS_PLUGIN_DIR . 'include/GmsWcAjax.php';
-
     }
 
     private function init_classes() {
+        new GmsLogger();
         new GmsAdminPage();
         new GmsCommon();
         new GmsWcAjax();
@@ -50,11 +51,11 @@ class GmsCartCheckout {
     }
 }
 
-// Initialize the plugin
 if (class_exists('GmsCartCheckout')) {
     register_activation_hook(__FILE__, ['GmsCartCheckout', 'activate']);
     register_deactivation_hook(__FILE__, ['GmsCartCheckout', 'deactivate']);
     register_uninstall_hook(__FILE__, ['GmsCartCheckout', 'uninstall']);
 
     new GmsCartCheckout();
+    ___('Plugin init');
 }
