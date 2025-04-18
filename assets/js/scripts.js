@@ -32,6 +32,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalCheckout = document.querySelector('#gms-modal-checkout');
     const modalCloseButton = document.querySelector('.gms-close-modal-btn');
     
+    //Disable place order button
+    const buttonCheckInterval = setInterval(checkButtonAndDisable, 500);
+    function checkButtonAndDisable() {
+        const placeOrderButton = document.getElementById('place_order');
+        if (placeOrderButton) {
+            placeOrderButton.disabled = true;
+            clearInterval(buttonCheckInterval);
+        }
+    }
+
     function resetColumns() {
         const col1 = document.querySelector('.col-1');
         const col2 = document.querySelector('.col-2');
