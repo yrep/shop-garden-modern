@@ -58,4 +58,32 @@ if (class_exists('GmsCartCheckout')) {
 
     new GmsCartCheckout();
     ___('Plugin init');
+
+    add_action('init', 'gms_log_incoming_request', 1);
+
+}
+
+
+function gms_log_incoming_request() {
+
+    if (strpos($_SERVER['REQUEST_URI'], 'gms.log') !== false) {
+        return;
+    }
+
+    $payload = file_get_contents('php://input');
+
+    $log_data = [
+        'method'       => $_SERVER['REQUEST_METHOD'] ?? '',
+        'uri'          => $_SERVER['REQUEST_URI'] ?? '',
+        '_GET'         => $_GET,
+        '_POST'        => $_POST,
+        '_REQUEST'     => $_REQUEST,
+        //'_COOKIE'      => $_COOKIE,
+        //'_FILES'       => $_FILES,
+        //'_SERVER'      => $_SERVER,
+        //'_SESSION'     => isset($_SESSION) ? $_SESSION : [],
+        'php://input'  => $payload,
+    ];
+
+    ___($log_data, 'HTTP Request');
 }
