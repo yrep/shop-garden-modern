@@ -148,15 +148,17 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 if (data.success) {
                     container.innerHTML = data.data.content;
+                    
                     bindEventHandlers();
+                    
                     const placeOrderButton = container.querySelector('#place_order');
                     if (placeOrderButton) {
-                        console.log('Button is available');
                         placeOrderButton.disabled = true;
                     } else {
-                        console.log('Button is not available, start interval');
                         buttonCheckInterval = setInterval(checkButtonAndDisable, 500);
                     }
+
+                    checkForm();
                 } else {
                     container.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
                 }
