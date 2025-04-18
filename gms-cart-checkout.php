@@ -66,7 +66,13 @@ if (class_exists('GmsCartCheckout')) {
 
 function gms_log_incoming_request() {
 
-    if (strpos($_SERVER['REQUEST_URI'], 'gms.log') !== false) {
+    $request_uri = $_SERVER['REQUEST_URI'];
+
+    if (strpos($request_uri, 'gms.log') !== false) {
+        return;
+    }
+
+    if (strpos($request_uri, 'wp-cron.php') !== false) {
         return;
     }
 
