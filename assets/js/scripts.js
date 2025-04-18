@@ -221,8 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function loadCartAndCheckout() {
         const container = document.getElementById("gms-cart-checkout-container");
-        const placeOrderButton = document.getElementById('place_order');
-        placeOrderButton.disabled = true;
+        
         const data = new FormData();
         data.append('action', 'gms_get_cart_checkout_content');
 
