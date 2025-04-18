@@ -2,52 +2,8 @@ var gmsOpenCart;
 
 document.addEventListener('DOMContentLoaded', function () {
     
-    
-
-
-
-    // document.addEventListener('click', logEvent);
-    // document.addEventListener('keydown', logEvent);
-    // document.addEventListener('mouseover', logEvent);
-    // document.addEventListener('touchstart', logEvent);
-    // Добавляйте сюда другие события по необходимости
-
-    // function logEvent(event) {
-    //     event.preventDefault();
-    //     event.target
-    //     console.log('Событие:', event.type);
-    //     console.log('Цель события:', event.target);
-    //     console.log('Полная информация о событии:', event);
-    //     console.dir(event);
-    // }
-
-/*
-    const headerSection = document.querySelector('.site-header-main-section-right');
-
-    console.dir(headerSection);
-
-    if (headerSection) {
-        var gmsCartButton = document.createElement('a');
-        gmsCartButton.href = '#';
-        gmsCartButton.className = 'gms-cart-icon';
-        gmsCartButton.innerHTML = '<span>C</span>';
-        headerSection.appendChild(gmsCartButton);
-    }
-*/
     const gmsCartButton = document.querySelector('.gms-cart-icon');
     const cartCountElement = document.querySelector('.cart-count');
-    
-    /*
-    const nextKadenceElement = gmsCartButton.nextElementSibling;
-
-
-    console.dir(nextKadenceElement);
-    if (nextKadenceElement) {
-        console.log('Элемент найден');
-        nextKadenceElement.style.display = 'none';
-        console.log('Отменили видимость');
-    }
-*/
 
     document.body.addEventListener('click', function(event) {
         const target = event.target.closest('a.added_to_cart.wc-forward');
@@ -68,13 +24,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     gmsCartButton.addEventListener('touchstart', function (event) {
-        //event.preventDefault();
         modalCheckout.style.display = "block";
         document.body.classList.add("modal-open");
         loadCartAndCheckout();
     }, { passive: true });
 
-    //const kadenceCartIcon = document.querySelector('.header-cart-button');
     const modalCheckout = document.querySelector('#gms-modal-checkout');
     const modalCloseButton = document.querySelector('.gms-close-modal-btn');
     
@@ -108,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
             col2Set.style.paddingRight = 0;
             orderReview.style.paddingLeft = 0;
         }
-        //console.log('Columns reset');
     }
 
     resetColumns();
@@ -117,17 +70,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function applyChanges() {
         const observer = new MutationObserver(function (mutationsList, observer) {
     
-            // const tbankPayment = document.querySelector('.payment_method_tbank');
-            // if (tbankPayment && !tbankPayment.dataset.updated) {
-            //     tbankPayment.innerHTML = 'К оплате принимаются любые российские карты. Оплата производится через терминал Т-Банка, на который вы будете перенаправлены после подтверждения заказа.';
-            //     tbankPayment.dataset.updated = 'true';
-            // }
-    
             const paymentMethods = document.querySelector('.payment_methods');
     
             if (paymentMethods && !paymentMethods.dataset.updated){
                 paymentMethods.style.display = 'none';
-                //console.log('Т-банк скрыт');
                 console.dir(paymentMethods);
                 paymentMethods.dataset.updated = true;
             }
@@ -135,56 +81,23 @@ document.addEventListener('DOMContentLoaded', function () {
             const wcOrderTableHeading = document.querySelector('#order_review_heading');
             if (wcOrderTableHeading && !wcOrderTableHeading.dataset.updated) {
                 wcOrderTableHeading.style.display = 'none';
-                //console.log('Таблица заказа скрыта');
                 wcOrderTableHeading.dataset.updated = true;
             }
     
             const wcOrderTable = document.querySelector('.woocommerce-checkout-review-order-table');
             if (wcOrderTable && !wcOrderTable.dataset.updated) {
                 wcOrderTable.style.display = 'none';
-                //console.log('Таблица заказа скрыта');
                 wcOrderTable.dataset.updated = true;
             }
     
             const customerDetailsCol2 = document.querySelector('#customer_details .col-2');
             if (customerDetailsCol2 && !customerDetailsCol2.dataset.updated) {
                 resetColumns();
-                //console.log('Колонки сброшены');
                 customerDetailsCol2.dataset.updated = true;
             }
             
-            /*
-            const kadenceCartIcon = document.querySelector('a.header-cart-button');
-            if (kadenceCartIcon && !kadenceCartIcon.dataset.updated) {
-                kadenceCartIcon.addEventListener('touchstart', function (event) {
-                    event.preventDefault();
-                    //removeAllEventListeners(kadenceCartIcon);
-                    console.log('kadenceCartIcon обноружена');
-                    console.dir(kadenceCartIcon);
-                    console.dir(event);
-                    kadenceCartIcon.baseURI = "";
-                    kadenceCartIcon.href = "";
-                    modalCheckout.style.display = "block";
-                    document.body.classList.add("modal-open");
-                    loadCartAndCheckout();
-                });
-                kadenceCartIcon.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    removeAllEventListeners(kadenceCartIcon);
-                    console.log('kadenceCartIcon обноружена');
-                    console.dir(kadenceCartIcon);
-                    console.dir(event);
-                    kadenceCartIcon.baseURI = "";
-                    kadenceCartIcon.href = "";
-                    modalCheckout.style.display = "block";
-                    document.body.classList.add("modal-open");
-                    loadCartAndCheckout();
-                });
-            }
-            */
             if (paymentMethods && wcOrderTable && customerDetailsCol2 && wcOrderTableHeading) {
                 observer.disconnect();
-                //console.log('Observer отключён');
             }
     
         });
@@ -197,15 +110,6 @@ document.addEventListener('DOMContentLoaded', function () {
         element.parentNode.replaceChild(clone, element);
         return clone;
     }
-    // Открытие модального окна
-    /*
-    kadenceCartIcon.addEventListener('click', function (event) {
-        event.preventDefault();
-        modalCheckout.style.display = "block";
-        document.body.classList.add("modal-open");
-        loadCartAndCheckout(); // Загружаем корзину при открытии модального окна
-    });
-    */
 
     modalCloseButton.onclick = function () {
         modalCheckout.style.display = "none";
@@ -244,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 applyChanges();
             })
             .catch(error => {
-                //console.error('Ошибка запроса:', error);
                 container.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
             });
             
@@ -265,8 +168,6 @@ document.addEventListener('DOMContentLoaded', function () {
         
         document.addEventListener('input', function (event) {
             if (event.target && event.target.classList.contains('gms-item-quantity')) {
-                //console.log('Input change');
-                //console.dir(event);
                 handleManualQuantityChange(event);
             }
         });
@@ -336,34 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.dir(data);
                     quantityInput.value = data.data.new_quantity;
                     itemTotal.textContent = data.data.cart_data_with_tax[cartItemKey].line_total + '₽';
-                    //itemTotal.textContent = data.data.cart_data[cartItemKey]['line_total'] + ' ₽';
-                    //console.log('Updated data:');
-                    //console.dir(data);
                     updateTotals(data);
-                    
-                    // Не работает тут
-                    //const currencySymbol = bdiElement.querySelector('.woocommerce-Price-currencySymbol').outerHTML;
-                    //wcPriceAmount.innerHTML = `${data.data.totals.subtotal}&nbsp;${currencySymbol}`;
-
-                    //Если сервер возвращает обновлённые данные корзины, обновите DOM
-                    
-                    /*
-                    if (data.cart_html) {
-                        const container = document.getElementById("gms-cart-checkout-container");
-                        const count = document.querySelector('#checkout-items-count > b');
-                        console
-
-                        container.innerHTML = data.cart_html;
-                        count.textContent = data.data.cart_contents_count;
-
-
-                        // const wcPriceAmount = document.querySelector('.woocommerce-Price-amount');
-                        // const currencySymbol = bdiElement.querySelector('.woocommerce-Price-currencySymbol').outerHTML;
-                        // wcPriceAmount.innerHTML = `${data.data.totals.subtotal}&nbsp;${currencySymbol}`;
-
-                        bindEventHandlers(); // Перепривязываем обработчики
-                    }
-                    */
                 } else {
                     console.log('Ошибка при обновлении количества:', data.message);
                 }
@@ -373,13 +247,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Ошибка AJAX:', error);
             });
     }
-
-    // Функция для удаления товара
     function removeItemFromCart(cartItemKey, cartItemElement) {
         const data = new FormData();
         data.append('action', 'gms_remove_from_cart');
         data.append('cart_item_key', cartItemKey);
-
         fetch(ajaxurl, {
             method: 'POST',
             body: data,
@@ -452,7 +323,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const errorMessage = document.getElementById('error-message');
 
         if (form && placeOrderButton) {
-            //console.log('Form and button found');
 
             const requiredFields = [
                 form.querySelector('#billing_first_name'),
@@ -509,125 +379,6 @@ document.addEventListener('DOMContentLoaded', function () {
             checkForm();
         }
     });
-
-
-
-
-   /*
-    document.body.addEventListener('submit', function(event) {
-        
-        if (event.target && event.target.matches('form.woocommerce-checkout')) {
-            const form = event.target;
-
-            const checkoutForm = document.querySelector('form.woocommerce-checkout');
-            const errorMessage = document.querySelector('#error-message');  
-            const firstName = document.querySelector('#billing_first_name');
-            const lastName = document.querySelector('#billing_last_name');
-            const phone = document.querySelector('#billing_phone');
-            const email = document.querySelector('#billing_email');
-            const comment = document.querySelector('#order_comments');
-            const terms = document.querySelector('#terms');
-
-            let isFormValid = true;
-
-            inputs = document.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.classList.remove('error');
-            });
-
-            errorMessage.style.display = 'none';
-
-            if (!firstName.value.trim()){
-                isFormValid = false;
-                firstName.classList.add('error');
-            }
-
-            if (!lastName.value.trim()){
-                isFormValid = false;
-                lastName.classList.add('error');
-            }
-
-            if (!phone.value.trim()){
-                isFormValid = false;
-                phone.classList.add('error');
-            }
-
-            if (!email.value.trim()){
-                isFormValid = false;
-                email.classList.add('error');
-            }
-
-            if (!comment.value.trim()){
-                isFormValid = false;
-                comment.classList.add('error');
-            }
-
-            if (!terms.value){
-                isFormValid = false;
-                terms.classList.add('error');
-            }
-
-            /*
-            inputs.forEach(input => {
-                if (!input.value.trim()) {
-                    isFormValid = false;
-                    input.classList.add('error');
-                }
-            });
-            
-            
-            if (!isFormValid) {
-                event.preventDefault();
-                errorMessage.style.display = 'block';
-            }
-        }
-    });
-*/
-
-/*
-    function updateCartCount() {
-        const data = new FormData();
-        data.append('action', 'gms_update_cart_count');
-        
-        fetch(ajaxurl, {
-            method: 'POST',
-            body: data,
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.cart_count !== undefined) {
-
-                    document.querySelector('.cart-count').textContent = data.cart_count;
-                }
-            })
-            .catch(error => console.error('Ошибка обновления корзины:', error));
-    }
-*/
-
-
-    // function updateCartCount() {
-    //     fetch('/wp-admin/admin-ajax.php?action=gms_update_cart_count')
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             if (data.cart_count !== undefined) {
-    //                 const cartCountElement = document.querySelector('.cart-count');
-    //                 if (cartCountElement) {
-    //                     cartCountElement.textContent = data.cart_count;
-    //                 }
-    //             }
-    //         })
-    //         .catch(error => console.error('Ошибка при обновлении корзины:', error));
-    // }
-
-
-    
-    // updateCartCount();
-
-    
-    // document.body.addEventListener('added_to_cart', function () {
-    //     updateCartCount();
-    // });
-
 
     bindEventHandlers();
 });
