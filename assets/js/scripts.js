@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     const gmsCartButton = document.querySelector('.gms-cart-icon');
     const cartCountElement = document.querySelector('.cart-count');
+    const buttonCheckInterval = null;
 
     document.body.addEventListener('click', function(event) {
         const target = event.target.closest('a.added_to_cart.wc-forward');
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalCloseButton = document.querySelector('.gms-close-modal-btn');
     
     //Disable place order button
-    const buttonCheckInterval = setInterval(checkButtonAndDisable, 500);
+    
     function checkButtonAndDisable() {
         const placeOrderButton = document.getElementById('place_order');
         if (placeOrderButton) {
@@ -147,9 +148,15 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 if (data.success) {
                     container.innerHTML = data.data.content;
-                    
-                    
                     bindEventHandlers();
+                    const placeOrderButton = container.querySelector('#place_order');
+                    if (placeOrderButton) {
+                        console.log('Button is available');
+                        placeOrderButton.disabled = true;
+                    } else {
+                        console.log('Button is not available, start interval');
+                        buttonCheckInterval = setInterval(checkButtonAndDisable, 500);
+                    }
                 } else {
                     container.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
                 }
