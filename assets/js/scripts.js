@@ -252,15 +252,25 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
 
                 if (data.success) {
+                    cartErrorMessage = document.querySelector("#cart-error-message");
+                    if(cartErrorMessage){
+                        cartErrorMessage.textContent = '';
+                        cartErrorMessage.classList.remove = 'show';
+                    }
+                    
                     console.log('Data for update');
                     console.dir(data);
                     quantityInput.value = data.data.new_quantity;
                     itemTotal.textContent = data.data.cart_data_with_tax[cartItemKey].line_total + '₽';
                     updateTotals(data);
                 } else {
-                    console.log('Ошибка при обновлении количества:', data.message);
+                    cartErrorMessage = document.querySelector("#cart-error-message");
+                    if(cartErrorMessage){
+                        cartErrorMessage.textContent = data.message;
+                        cartErrorMessage.classList.add = 'show';
+                    }
+                    console.log(data.message);
                 }
-                    
             })
             .catch(error => {
                 console.error('Ошибка AJAX:', error);

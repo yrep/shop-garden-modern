@@ -410,3 +410,13 @@ animation: flash 0.3s ease forwards;
     font-size: small;
     color: #cf2e2e;
 }
+
+#cart-error-message {
+    display: none;
+}
+
+#cart-error-message .show {
+    display: block;
+    font-size: small;
+    color: #cf2e2e;
+}

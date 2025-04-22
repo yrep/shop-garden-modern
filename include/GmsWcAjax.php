@@ -68,6 +68,7 @@ class GmsWcAjax {
         $this->responseToFront();
     }
 
+    /* No quantity check
     public function update_cart_quantity() {
         if (!class_exists('WC_Cart')) {
             wp_send_json_error(['message' => 'WooCommerce is not active']);
@@ -89,6 +90,57 @@ class GmsWcAjax {
         
         $this->responseToFront($quantity);
     }
+    */
+
+    public function update_cart_quantity() {
+        if (!class_exists('WC_Cart')) {
+            wp_send_json_error(['message' => 'WooCommerce is not active']);
+        }
+    
+        $cart_item_key = isset($_POST['cart_item_key']) ? sanitize_text_field($_POST['cart_item_key']) : '';
+        $new_quantity = isset($_POST['quantity']) ? intval($_POST['quantity']) : 0;
+    
+        if (empty($cart_item_key) || $new_quantity < 1) {
+            wp_send_json_error(['message' => 'Invalid cart item or quantity']);
+        }
+    
+        $cart = WC()->cart;
+    
+        $cart_item = $cart->get_cart_item($cart_item_key);
+    
+        if (!$cart_item) {
+            wp_send_json_error(['message' => 'Cart item not found']);
+        }
+    
+        $product = $cart_item['data'];
+        $current_quantity = $cart_item['quantity'];
+        
+        if (!$product->is_purchasable()) {
+            wp_send_json_error(['message' => 'Product is not available for purchase']);
+        }
+    
+        if ($product->managing_stock() && !$product->is_on_backorder($new_quantity)) {
+            $stock_quantity = $product->get_stock_quantity();
+    
+            if ($stock_quantity < $new_quantity) {
+                wp_send_json_error([
+                    'message' => 'Недостаточно товара на складе. Доступно только ' . $stock_quantity . ' шт.',
+                ]);
+            }
+        }
+    
+        $cart->set_quantity($cart_item_key, $new_quantity, true);
+        $this->responseToFront($new_quantity);
+    }
+    
+
+
+
+
+
+
+
+
     
     public function responseToFront($quantity = null){
         // Получаем данные корзины
@@ -226,6 +278,7 @@ class GmsWcAjax {
             ?>
             </div>
             <?php
+            echo '<div id="cart-error-message" class="error"></div>';
             echo '<div class="cart-totals">';
             echo '<span>Всего товаров <span id="checkout-items-count"><b>&nbsp' . WC()->cart->get_cart_contents_count() . ' </b></span></span>';
             echo '<span>на общую сумму <span id="checkout-total"><b>&nbsp' . WC()->cart->get_total() . ' </b></span></span>';
