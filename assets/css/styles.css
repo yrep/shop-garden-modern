@@ -415,7 +415,7 @@ animation: flash 0.3s ease forwards;
     display: none;
 }
 
-#cart-error-message .show {
+#cart-error-message.show {
     display: block;
     font-size: small;
     color: #cf2e2e;
