@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const gmsCartButton = document.querySelector('.gms-cart-icon');
     const cartCountElement = document.querySelector('.cart-count');
     const buttonCheckInterval = null;
-
+    let isHandlersBound = false;
+    
     document.body.addEventListener('click', function(event) {
         const target = event.target.closest('a.added_to_cart.wc-forward');
         //console.dir(target);
@@ -174,23 +175,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function bindEventHandlers() {
+        if (isHandlersBound) return; // Если уже были добавлены — выходим
+        isHandlersBound = true;
+
         document.addEventListener('click', function (event) {
-            if (event.target && event.target.classList.contains('gms-decrease-quantity')) {
+            if (event.target.classList.contains('gms-decrease-quantity')) {
                 handleQuantityChange(event, -1);
-            } else if (event.target && event.target.classList.contains('gms-increase-quantity')) {
+            } else if (event.target.classList.contains('gms-increase-quantity')) {
                 handleQuantityChange(event, 1);
-            } else if (event.target && event.target.classList.contains('gms-remove-item')) {
+            } else if (event.target.classList.contains('gms-remove-item')) {
                 handleRemoveItem(event);
             }
         });
 
-        
         document.addEventListener('input', function (event) {
-            if (event.target && event.target.classList.contains('gms-item-quantity')) {
+            if (event.target.classList.contains('gms-item-quantity')) {
                 handleManualQuantityChange(event);
             }
         });
-        
     }
 
 
@@ -266,10 +268,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     cartErrorMessage = document.querySelector("#cart-error-message");
                     if(cartErrorMessage){
-                        cartErrorMessage.textContent = data.message;
+                        cartErrorMessage.textContent = data.data.message;
                         cartErrorMessage.classList.add = 'show';
                     }
-                    console.log(data.message);
+                    console.log(data.data.message);
                 }
             })
             .catch(error => {
