@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     cartErrorMessage = document.querySelector("#cart-error-message");
                     if(cartErrorMessage){
                         cartErrorMessage.textContent = '';
-                        cartErrorMessage.classList.remove = 'show';
+                        cartErrorMessage.classList.remove('show');
                     }
                     
                     console.log('Data for update');
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     cartErrorMessage = document.querySelector("#cart-error-message");
                     if(cartErrorMessage){
                         cartErrorMessage.textContent = data.data.message;
-                        cartErrorMessage.classList.add = 'show';
+                        cartErrorMessage.classList.add('show');
                     }
                     console.log(data.data.message);
                 }
