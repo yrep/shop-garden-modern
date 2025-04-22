@@ -281,7 +281,7 @@ class GmsWcAjax {
             echo '<div id="cart-error-message" class="error"></div>';
             echo '<div class="cart-totals">';
             echo '<span>Всего товаров <span id="checkout-items-count"><b>&nbsp' . WC()->cart->get_cart_contents_count() . ' </b></span></span>';
-            echo '<span>на общую сумму <span id="checkout-total"><b>&nbsp' . WC()->cart->get_total() . ' </b></span></span>';
+            echo '<span>&nbsp на общую сумму <span id="checkout-total"><b>&nbsp' . WC()->cart->get_total() . ' </b></span></span>';
             echo '</div>';
             echo '<p><b>Стоимость доставки не входит в сумму заказа.</b></p>';
             echo '<p>Найти ближайший к вам пункт <a target="_blank" href="https://www.cdek.ru/ru/offices/">СДЭК</a>.</p>';
