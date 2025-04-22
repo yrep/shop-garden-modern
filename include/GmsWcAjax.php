@@ -124,7 +124,7 @@ class GmsWcAjax {
     
             if ($stock_quantity < $new_quantity) {
                 wp_send_json_error([
-                    'message' => 'Недостаточно товара на складе. Доступно только ' . $stock_quantity . ' шт.',
+                    'message' => 'Недостаточно товара на складе. Доступно: ' . $stock_quantity . ' шт.' . PHP_EOL . 'Свяжитесь с нами, чтобы уточнить сроки поступления товара: ' . $product->get_name(),
                 ]);
             }
         }
