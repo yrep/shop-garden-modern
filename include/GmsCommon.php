@@ -73,7 +73,7 @@ class GmsCommon {
         return sprintf(
 
             '<div class="gms-header-cart-icon-container">
-                <a href="javascript:void(0)" class="gms-cart-icon" onclick="gmsOpenCart()">
+                <a href="#" class="gms-cart-icon" id="gms-cart-trigger">
                     %s
                     <span class="cart-count header-cart-total">%d</span>
                 </a>

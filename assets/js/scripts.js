@@ -2,7 +2,7 @@ var gmsOpenCart;
 
 document.addEventListener('DOMContentLoaded', function () {
     
-    const gmsCartButton = document.querySelector('.gms-cart-icon');
+    const gmsCartButton = document.getElementById('gms-cart-trigger');;
     const cartCountElement = document.querySelector('.cart-count');
     const buttonCheckInterval = null;
     let isHandlersBound = false;
@@ -142,9 +142,16 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
             body: new URLSearchParams(data),
         })
-            .then(response => response.json())
+            .then(response => {
+                resp = response.json();
+                console.log('Response:');
+                console.dir(resp);
+                return resp;
+            })
             .then(data => {
                 if (data.success) {
+                    console.log('Data:');
+                    console.dir(data);
                     container.innerHTML = data.data.content;
                     
                     bindEventHandlers();
