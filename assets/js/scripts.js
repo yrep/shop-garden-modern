@@ -152,6 +152,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data.success) {
                     console.log('Data:');
                     console.dir(data);
+                    console.log('Data content:');
+                    console.dir(data.data.content);
                     container.innerHTML = data.data.content;
                     
                     bindEventHandlers();
@@ -165,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     checkForm();
                 } else {
-                    if(data && data.content){
+                    if(data && data.data.content){
                         container.innerHTML = data.content;
                     } else {
                         container.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
@@ -177,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 if(error.content){
-                    container.innerHTML = error.content;
+                    container.innerHTML = error.data.content;
                 } else {
                     container.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
                 }
