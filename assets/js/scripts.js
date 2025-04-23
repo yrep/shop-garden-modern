@@ -142,18 +142,9 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
             body: new URLSearchParams(data),
         })
-            .then(response => {
-                resp = response.json();
-                console.log('Response:');
-                console.dir(resp);
-                return resp;
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log('Data:');
-                    console.dir(data);
-                    console.log('Data content:');
-                    console.dir(data.data.content);
                     container.innerHTML = data.data.content;
                     
                     bindEventHandlers();
