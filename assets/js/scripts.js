@@ -167,8 +167,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     checkForm();
                 } else {
-                    if(data && data.data.content){
-                        container.innerHTML = data.content;
+                    if(data.data && data.data.content){
+                        container.innerHTML = data.data.content;
                     } else {
                         container.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
                     }
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 applyChanges();
             })
             .catch(error => {
-                if(error.content){
+                if(error.data.content){
                     container.innerHTML = error.data.content;
                 } else {
                     container.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
