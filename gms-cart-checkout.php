@@ -10,44 +10,65 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Define plugin constants
 define('GMS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('GMS_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 class GmsCartCheckout {
 
     public function __construct() {
+
+        if (!$this->isWoocommerceActive()) {
+            add_action('admin_notices', [$this, 'showWoocommerceMissingNotice']);
+            return;
+        }
+
         $this->load_dependencies();
         $this->init_classes();
+        
+        add_filter( 'woocommerce_min_password_strength', function() { return 0; } );
+    }
+
+    /**
+     *  Checks WooCommerce
+     */
+    private function isWoocommerceActive() {
+        return class_exists('WooCommerce') || 
+        in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')));
+    }
+
+    /**
+     *  Warning WooCommerce is not active
+     */
+    public function showWoocommerceMissingNotice() {
+        echo '<div class="notice notice-error is-dismissible">';
+        echo '<p>Для работы плагина GM Shop Cart and Checkout необходимо активировать WooCommerce.</p>';
+        echo '</div>';
     }
 
     private function load_dependencies() {
-        // foreach ( glob( GMS_PLUGIN_DIR . "includes/*.php" ) as $file ) {
-        //     include_once $file;
-        // }
-        include_once GMS_PLUGIN_DIR . 'helpers/GmsLogger.php';
+        //include_once GMS_PLUGIN_DIR . 'helpers/GmsLogger.php';
         include_once GMS_PLUGIN_DIR . 'include/GmsAdminPage.php';
         include_once GMS_PLUGIN_DIR . 'include/GmsCommon.php';
         include_once GMS_PLUGIN_DIR . 'include/GmsWcAjax.php';
     }
 
     private function init_classes() {
-        new GmsLogger();
+        //new GmsLogger();
         new GmsAdminPage();
         new GmsCommon();
         new GmsWcAjax();
     }
 
     public static function activate() {
-        // Activation logic (if needed)
+        //
     }
 
     public static function deactivate() {
-        // Deactivation logic (if needed)
+        //
     }
 
     public static function uninstall() {
-        // Uninstall logic (if needed)
+        //
     }
 }
 
@@ -57,13 +78,13 @@ if (class_exists('GmsCartCheckout')) {
     register_uninstall_hook(__FILE__, ['GmsCartCheckout', 'uninstall']);
 
     new GmsCartCheckout();
-    ___('Plugin init');
 
-    add_action('init', 'gms_log_incoming_request', 1);
+    //___('Plugin init');
+    //add_action('init', 'gms_log_incoming_request', 1);
 
 }
 
-
+/* For debug
 function gms_log_incoming_request() {
 
     $request_uri = $_SERVER['REQUEST_URI'];
@@ -93,3 +114,4 @@ function gms_log_incoming_request() {
 
     ___($log_data, 'HTTP Request');
 }
+*/

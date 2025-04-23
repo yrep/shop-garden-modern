@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
     document.body.addEventListener('click', function(event) {
         const target = event.target.closest('a.added_to_cart.wc-forward');
-        //console.dir(target);
         if (target) {
             event.preventDefault();
             modalCheckout.style.display = "block";
@@ -35,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalCloseButton = document.querySelector('.gms-close-modal-btn');
     
     //Disable place order button
-    
     function checkButtonAndDisable() {
         const placeOrderButton = document.getElementById('place_order');
         if (placeOrderButton) {
@@ -86,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
             if (paymentMethods && !paymentMethods.dataset.updated){
                 paymentMethods.style.display = 'none';
-                console.dir(paymentMethods);
                 paymentMethods.dataset.updated = true;
             }
     
@@ -161,14 +158,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     checkForm();
                 } else {
-                    container.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
+                    if(data && data.content){
+                        container.innerHTML = data.content;
+                    } else {
+                        container.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
+                    }
                 }
             }).then(() => {
                 resetColumns();
                 applyChanges();
             })
             .catch(error => {
-                container.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
+                if(error.content){
+                    container.innerHTML = error.content;
+                } else {
+                    container.innerHTML = '<p>Произошла ошибка при загрузке данных.</p>';
+                }
             });
             
     }
@@ -260,8 +265,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         cartErrorMessage.classList.remove('show');
                     }
                     
-                    console.log('Data for update');
-                    console.dir(data);
                     quantityInput.value = data.data.new_quantity;
                     itemTotal.textContent = data.data.cart_data_with_tax[cartItemKey].line_total + '₽';
                     updateTotals(data);
@@ -271,7 +274,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         cartErrorMessage.textContent = data.data.message;
                         cartErrorMessage.classList.add('show');
                     }
-                    console.log(data.data.message);
                 }
             })
             .catch(error => {

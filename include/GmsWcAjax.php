@@ -6,32 +6,24 @@ if (!defined('ABSPATH')) {
 class GmsWcAjax {
 
     public function __construct() {
-        // Очистить корзину
+
         add_action('wp_ajax_gms_clear_cart', [$this, 'clear_cart']);
         add_action('wp_ajax_nopriv_gms_clear_cart', [$this, 'clear_cart']);
 
-        // Удаление товара из корзины
         add_action('wp_ajax_gms_remove_from_cart', [$this, 'remove_from_cart']);
         add_action('wp_ajax_nopriv_gms_remove_from_cart', [$this, 'remove_from_cart']);
 
-        // Изменение количества товара в корзине
         add_action('wp_ajax_gms_update_cart_item_quantity', [$this, 'update_cart_item_quantity']);
         add_action('wp_ajax_nopriv_gms_update_cart_item_quantity', [$this, 'update_cart_item_quantity']);
 
-        // Получение содержимого корзины
         add_action('wp_ajax_gms_get_cart_checkout_content', [$this, 'get_cart_checkout_content']);
         add_action('wp_ajax_nopriv_gms_get_cart_checkout_content', [$this, 'get_cart_checkout_content']);
 
         add_action('wp_ajax_gms_update_cart_quantity', [$this, 'update_cart_quantity']);
         add_action('wp_ajax_nopriv_gms_update_cart_quantity', [$this, 'update_cart_quantity']);
 
-        // Обработчик AJAX для обновления данных checkout
         add_action('wp_ajax_gms_update_checkout_totals', [$this, 'update_checkout_totals']);
         add_action('wp_ajax_nopriv_gms_update_checkout_totals', [$this, 'update_checkout_totals']);
-
-        // Обработчик AJAX для обновления данных количества в корзине
-        // add_action('wp_ajax_gms_update_cart_count', 'update_cart_count');
-        // add_action('wp_ajax_nopriv_gms_update_cart_count', 'update_cart_count');
     
     }
 
@@ -45,52 +37,23 @@ class GmsWcAjax {
         wp_send_json_success(['message' => 'Cart cleared']);
     }
 
-    // Обработчик для удаления товара из корзины
+    // Remove item from cart handler
     public function remove_from_cart() {
         if (!class_exists('WC_Cart')) {
             wp_send_json_error(['message' => 'WooCommerce is not active']);
         }
 
-        // Получаем cart_item_key из запроса
         $cart_item_key = isset($_POST['cart_item_key']) ? sanitize_text_field($_POST['cart_item_key']) : '';
 
         if (empty($cart_item_key)) {
             wp_send_json_error(['message' => 'Invalid cart item key']);
         }
-
-        // Удаляем товар из корзины по cart_item_key
         $cart = WC()->cart;
         $cart->remove_cart_item($cart_item_key);
-
-        // Отправляем успешный ответ
-        //wp_send_json_success(['message' => 'Item removed from cart']);
 
         $this->responseToFront();
     }
 
-    /* No quantity check
-    public function update_cart_quantity() {
-        if (!class_exists('WC_Cart')) {
-            wp_send_json_error(['message' => 'WooCommerce is not active']);
-        }
-    
-        // Получаем cart_item_key и новое количество товара
-        $cart_item_key = isset($_POST['cart_item_key']) ? sanitize_text_field($_POST['cart_item_key']) : '';
-        $quantity = isset($_POST['quantity']) ? intval($_POST['quantity']) : 0;
-    
-        if (empty($cart_item_key) || $quantity < 1) {
-            wp_send_json_error(['message' => 'Invalid cart item or quantity']);
-        }
-    
-        // Получаем корзину
-        $cart = WC()->cart;
-    
-        // Обновляем количество товара в корзине
-        $cart->set_quantity($cart_item_key, $quantity, true);  // true — перезаписать без изменений
-        
-        $this->responseToFront($quantity);
-    }
-    */
 
     public function update_cart_quantity() {
         if (!class_exists('WC_Cart')) {
@@ -133,25 +96,15 @@ class GmsWcAjax {
         $this->responseToFront($new_quantity);
     }
     
-
-
-
-
-
-
-
-
     
     public function responseToFront($quantity = null){
-        // Получаем данные корзины
         $cart_data = WC()->cart->get_cart();
 
         if (!WC()->cart->is_empty()) {
-            // Получаем данные корзины
-            $subtotal = WC()->cart->get_cart_subtotal(); // Сумма без налогов
-            $total = WC()->cart->get_total(); // Общая сумма
-            $taxes = WC()->cart->get_taxes_total(); // Сумма налогов
-            $shipping = WC()->cart->get_cart_shipping_total(); // Стоимость доставки
+            $subtotal = WC()->cart->get_cart_subtotal();
+            $total = WC()->cart->get_total();
+            $taxes = WC()->cart->get_taxes_total();
+            $shipping = WC()->cart->get_cart_shipping_total();
             $count = WC()->cart->get_cart_contents_count();
             $payment_gateways = WC()->payment_gateways->get_available_payment_gateways();
 
@@ -166,7 +119,7 @@ class GmsWcAjax {
             }
         }
 
-        // Отправляем данные с новым количеством
+        // Data with new quantity
         wp_send_json_success([
             'new_quantity' => $quantity,
             'cart_data' => $cart_data,
@@ -188,22 +141,18 @@ class GmsWcAjax {
             wp_send_json_error(['message' => 'WooCommerce is not active']);
         }
 
-        // Обновляем корзину
         WC()->cart->calculate_totals();
 
-        // Получаем товары из корзины
         $cart = WC()->cart->get_cart();
 
         ob_start();
 
-        include(plugin_dir_path(__FILE__) . '../templates/modal_checkout.php'); // Путь к шаблону для модального окна
+        include(plugin_dir_path(__FILE__) . '../templates/modal_checkout.php'); // Modal window template
         ?>
         <div class="cart-container">
         <?php
         if (!empty($cart)) {
             foreach ($cart as $cart_item_key => $cart_item) {
-                // file_put_contents("F:\log.txt", "Cart item:", FILE_APPEND);
-                // file_put_contents("F:\log.txt", print_r($cart_item), FILE_APPEND);
 
                 $product = $cart_item['data'];
                 $product_id = $cart_item['product_id'];
@@ -296,18 +245,10 @@ class GmsWcAjax {
 
 
 
-        // Выводим обновленную форму оформления заказа
+        // New order form
         echo '<div class="woocommerce-checkout-form">';
-        echo do_shortcode('[woocommerce_checkout]'); // Шорткод для вывода формы оформления заказа
+        echo do_shortcode('[woocommerce_checkout]'); // Order form shortcode
         echo '</div>';
-
-        // Обновленные данные
-        // echo '<div class="checkout-summary">';
-        // echo '<p>Итого: <span id="checkout-cart-total">' . WC()->cart->get_cart_subtotal() . '</span></p>';
-        // echo '<p>Доставка: <span id="checkout-shipping-total">' . WC()->cart->get_shipping_total() . '</span></p>';
-        // echo '<p>Общая сумма: <span id="checkout-total">' . WC()->cart->get_total() . '</span></p>';
-        // echo '<p>Количество товаров: <span id="cart-item-count">' . WC()->cart->get_cart_contents_count() . '</span></p>';
-        // echo '</div>';
 
         $content = ob_get_clean();
         wp_send_json_success(['content' => $content]);
@@ -318,21 +259,17 @@ class GmsWcAjax {
             wp_send_json_error(['message' => 'WooCommerce is not active']);
         }
 
-        // Обновляем корзину
         WC()->cart->calculate_totals();
         
-        // Получаем актуальные данные
-        $cart_total = WC()->cart->get_cart_total();  // Общая сумма
-        $cart_subtotal = WC()->cart->get_cart_subtotal();  // Подытог
-        $cart_contents_count = WC()->cart->get_cart_contents_count();  // Количество товаров в корзине
-        $shipping_total = WC()->cart->get_shipping_total();  // Стоимость доставки
+        $cart_total = WC()->cart->get_cart_total();
+        $cart_subtotal = WC()->cart->get_cart_subtotal();
+        $cart_contents_count = WC()->cart->get_cart_contents_count();
+        $shipping_total = WC()->cart->get_shipping_total();
         $payment_gateways = WC()->payment_gateways->get_available_payment_gateways();
 
-        // Могут быть другие данные, которые вам нужно передать:
-        $total = WC()->cart->get_total();  // Финальная сумма
-        $discount_total = WC()->cart->get_discount_total();  // Скидки (если есть)
+        $total = WC()->cart->get_total();
+        $discount_total = WC()->cart->get_discount_total();
 
-        // Отправляем обновленные данные в JS
         wp_send_json_success([
             'cart_total' => $cart_total,
             'cart_subtotal' => $cart_subtotal,
@@ -343,16 +280,4 @@ class GmsWcAjax {
             'payment_gateways' => $payment_gateways,
         ]);
     }
-
-
-    // function update_cart_count() {
-    //     if (class_exists('WooCommerce')) {
-    //         $cart_count = WC()->cart->get_cart_contents_count();
-    //         wp_send_json(array('cart_count' => $cart_count));
-    //     } else {
-    //         wp_send_json(array('cart_count' => 0));
-    //     }
-    // }
-    
-    
 }

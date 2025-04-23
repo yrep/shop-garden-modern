@@ -7,7 +7,6 @@ class GmsCommon {
 	
     public function __construct() {
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
-        //add_action('wp_head', [$this, 'add_custom_header']);
         add_action('wp_footer', [$this, 'add_modal_window_to_footer']);
         add_filter('woocommerce_locate_template', [$this, 'gmscc_override_woocommerce_template'], 10, 3);
         add_action('kadence_render_mobile_header_column', [$this, 'add_custom_button_to_kadence_mobile_navigation'], 10, 2);
@@ -49,16 +48,12 @@ class GmsCommon {
         wp_localize_script('gms-scripts', 'ajaxurl', admin_url('admin-ajax.php'));
     }
 
-    // public function add_custom_header() {
-    //     echo '<div style="background-color: red; padding: 10px; text-align: center;"><a id="gms-clear-cart" href="#">Clear cart</a></div>';
-    //     echo '<button id="open-modal-btn">Открыть модальное окно</button>';
-    // }
-
     function add_custom_button_to_kadence_mobile_navigation($row, $side) {
         if ($side === 'right') {
         echo $this->returnCartIcon(); 
         }
     }
+    
     //'kadence_render_header_column', $row, 'right'
     function add_custom_button_to_kadence_navigation($row, $side) {
         if ($side === 'right') {
@@ -93,27 +88,17 @@ class GmsCommon {
     
     function gms_remove_my_account_tabs($items) {
         unset($items['downloads']);
-        //unset($items['edit-address']);
-        
         return $items;
     }
 
 
-    // private function returnCartIcon(){
-    //     return '<a href="#" class="gms-cart-icon" onclick="gmsOpenCart()">Корзина</a>';
-    // }
-
     public function add_modal_window_to_footer() {
-        //if (is_cart() || is_checkout()) {
-            include plugin_dir_path(__FILE__) . '../template/modal_checkout.php';
-        //}
+        include plugin_dir_path(__FILE__) . '../template/modal_checkout.php';
+
     }
     
 
     public function gmscc_override_woocommerce_template($template, $template_name, $template_path) {
-
-        //file_put_contents(__DIR__ . '/../log.txt', 'Template name: ' . $template_name, FILE_APPEND);
-        //file_put_contents(__DIR__ . '/../path.txt', 'Path to templates: ' . plugin_dir_path(__FILE__), FILE_APPEND);
 
         $plugin_path = __DIR__ . '/../templates/woocommerce/';
 
@@ -125,7 +110,6 @@ class GmsCommon {
         return $template;
     }
 
-    //Убираем ненужные поля Checkout
     function gms_custom_remove_checkout_fields($fields) {
         unset($fields['billing']['billing_company']);
         unset($fields['billing']['billing_address_1']);
@@ -151,8 +135,6 @@ class GmsCommon {
         return $fields;
     }
 
-
-    // Изменение текста кнопки Checkout
     function gms_custom_checkout_button_html( $button_html ) {
         $original_text  = __( 'Place order', 'woocommerce' );
         $custom_text    = 'Оплатить картой через Т-Банк';
@@ -160,7 +142,4 @@ class GmsCommon {
         $button_html = str_replace( $original_text, $custom_text, $button_html );
         return $button_html;
     }
-
-    
-
 }
