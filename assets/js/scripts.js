@@ -7,6 +7,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const buttonCheckInterval = null;
     let isHandlersBound = false;
     
+
+    const menuLinks = document.querySelectorAll(".menu-open-cart a");
+
+    menuLinks.forEach(link => {
+        if (link.textContent.trim() === "Корзина") {
+            link.parentElement.classList.add("open-cart-btn");
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (typeof gmsOpenCart === "function") {
+                    gmsOpenCart();
+                }
+            });
+        }
+    });
+
+
+
     document.body.addEventListener('click', function(event) {
         const target = event.target.closest('a.added_to_cart.wc-forward');
         if (target) {
